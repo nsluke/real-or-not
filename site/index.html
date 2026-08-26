@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Real or Not? — vote on cards from r/RealOrNotTCG</title>
+<meta name="description" content="Look at a card posted to r/RealOrNotTCG and call it: real, counterfeit, or too hard to tell. See how everyone else voted.">
+<meta name="referrer" content="no-referrer">
+<meta property="og:title" content="Real or Not?">
+<meta property="og:description" content="Can you spot a counterfeit trading card? Vote on real submissions from r/RealOrNotTCG.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔍</text></svg>">
+<link rel="preconnect" href="https://i.redd.it" crossorigin>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="topbar">
+  <h1>Real<span class="or">or</span>Not?</h1>
+  <p class="source">cards from <a href="https://www.reddit.com/r/RealOrNotTCG/" target="_blank" rel="noopener">r/RealOrNotTCG</a></p>
+  <div class="counter" id="counter" aria-live="polite"></div>
+</header>
+
+<div class="notice" id="notice" hidden></div>
+
+<main id="stage">
+  <p class="status" id="status">Loading cards…</p>
+
+  <article class="card" id="card" hidden>
+    <figure class="shot">
+      <button class="nav prev" id="prevImg" type="button" aria-label="Previous photo">‹</button>
+      <a class="frame" id="frame" target="_blank" rel="noopener noreferrer" title="Open the full-size photo">
+        <img id="photo" alt="" decoding="async" referrerpolicy="no-referrer">
+      </a>
+      <button class="nav next" id="nextImg" type="button" aria-label="Next photo">›</button>
+      <figcaption class="dots" id="dots" aria-live="polite"></figcaption>
+    </figure>
+
+    <div class="meta">
+      <h2 id="title"></h2>
+      <p class="byline"><span id="author"></span> · <span id="when"></span> · <span id="comments"></span></p>
+      <p class="body" id="body"></p>
+    </div>
+
+    <div class="verdict" id="verdict">
+      <button class="btn fake" id="voteFake" type="button"><b>NOT REAL</b><small>counterfeit / proxy</small></button>
+      <button class="btn unsure" id="voteUnsure" type="button"><b>CAN'T TELL</b><small>not enough to go on</small></button>
+      <button class="btn real" id="voteReal" type="button"><b>REAL</b><small>genuine card</small></button>
+    </div>
+
+    <div class="reasons" id="reasons" hidden>
+      <p class="reasons-q">What's stopping you?</p>
+      <div class="chips">
+        <button class="chip" type="button" data-reason="blurry"><span class="key">1</span> Image too blurry</button>
+        <button class="chip" type="button" data-reason="more"><span class="key">2</span> Need more photos</button>
+        <button class="chip" type="button" data-reason="closer"><span class="key">3</span> Need closer photos</button>
+      </div>
+    </div>
+
+    <div class="results" id="results" hidden>
+      <p class="yours" id="yours"></p>
+      <div class="bar" id="bar" role="img" aria-label="How everyone voted">
+        <div class="seg real" id="segReal"><span id="labelReal"></span></div>
+        <div class="seg unsure" id="segUnsure"><span id="labelUnsure"></span></div>
+        <div class="seg fake" id="segFake"><span id="labelFake"></span></div>
+      </div>
+      <p class="tally" id="tallyText"></p>
+      <p class="breakdown" id="breakdown" hidden></p>
+      <p class="flair" id="flair" hidden></p>
+      <div class="after">
+        <a class="thread" id="thread" target="_blank" rel="noopener">See the verdict on Reddit ↗</a>
+        <button class="next" id="next" type="button">Next card →</button>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer>
+  <button class="ghost" id="skip" type="button">Skip</button>
+  <button class="ghost" id="reshuffle" type="button">Shuffle deck</button>
+  <span class="hint">← not real · ↓ can't tell · → real · space for next</span>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

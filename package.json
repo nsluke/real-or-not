@@ -1,0 +1,18 @@
+{
+  "name": "real-or-not",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vote on whether trading cards posted to r/RealOrNotTCG are real",
+  "type": "module",
+  "scripts": {
+    "deck": "node scripts/fetch-posts.mjs",
+    "dev": "node scripts/fetch-posts.mjs && node dev-server.js",
+    "serve": "node dev-server.js",
+    "rules": "npx --yes firebase-tools deploy --only firestore:rules,firestore:indexes",
+    "test:rules": "firebase emulators:exec --only firestore --project real-or-not-rules-test 'node scripts/rules.test.mjs'",
+    "emulators": "firebase emulators:start --only firestore,auth --project demo-real-or-not"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
