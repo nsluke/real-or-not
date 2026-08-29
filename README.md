@@ -13,7 +13,7 @@ There is no server. Three moving parts:
 
 | Part | What it does |
 | --- | --- |
-| **GitHub Actions** (`.github/workflows/deploy.yml`) | Every 30 minutes, pulls the subreddit through Reddit's official API and writes `site/posts.json` — the deck. Credentials live in repo secrets, never in the page. |
+| **GitHub Actions** (`.github/workflows/deploy.yml`) | Every 30 minutes, pulls the subreddit through Reddit's official API and writes `site/posts.json` — the deck. Credentials live in repo secrets, never in the page. Without those secrets the run skips instead of failing, and the workflow stays disabled until [SETUP.md](SETUP.md) is done. |
 | **GitHub Pages** | Serves `site/` as a static page. Card photos are hotlinked from `i.redd.it` with `referrerpolicy="no-referrer"`. |
 | **Firestore** | Holds the votes. The browser signs in with Firebase anonymous auth and writes one document per (post, person). |
 

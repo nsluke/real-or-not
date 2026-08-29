@@ -61,8 +61,16 @@ card shows "Couldn't load the tally" with a link in the browser console to creat
 
 ## 3. GitHub Pages
 
-1. Repo → **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-2. Push to `main`, or trigger **Actions → Build deck and deploy → Run workflow**.
+The deploy workflow is **disabled** right now, so nothing runs on a schedule until the steps
+above are done. Turn it back on when they are:
+
+```bash
+gh workflow enable "Build deck and deploy" --repo nsluke/real-or-not
+gh workflow run "Build deck and deploy" --repo nsluke/real-or-not
+```
+
+1. Repo → **Settings → Pages → Build and deployment → Source: GitHub Actions** (already set).
+2. Enable and run the workflow with the commands above.
 
 The workflow rebuilds the deck every 30 minutes and redeploys. It fails loudly if the Reddit
 credentials are missing, and warns (but still deploys) if the Firebase config is still

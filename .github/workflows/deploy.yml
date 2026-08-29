@@ -20,6 +20,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      configured: ${{ steps.creds.outputs.configured }}
     steps:
       - uses: actions/checkout@v7
 
@@ -27,18 +29,24 @@ jobs:
         with:
           node-version: '22'
 
+      # Missing credentials is a "not set up yet" state, not a breakage. Skipping keeps a
+      # scheduled run from failing every 30 minutes and mailing about it; anything that
+      # goes wrong *after* this point is a real failure and still fails the run.
       - name: Check Reddit credentials
+        id: creds
         env:
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
         run: |
-          if [ -z "$REDDIT_CLIENT_ID" ]; then
-            echo "::error::REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET are not set. Reddit blocks"\
-                 "unauthenticated requests from GitHub's IP ranges, so the build would fail."\
-                 "Add them under Settings → Secrets and variables → Actions."
-            exit 1
+          if [ -n "$REDDIT_CLIENT_ID" ]; then
+            echo 'configured=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'configured=false' >> "$GITHUB_OUTPUT"
+            echo "::notice::Skipped: REDDIT_CLIENT_ID / REDDIT_CLIENT_SECRET are not set, so"\
+                 "there is no deck to build. See SETUP.md, then re-run this workflow."
           fi
 
       - name: Build the deck
+        if: steps.creds.outputs.configured == 'true'
         env:
           REDDIT_CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
           REDDIT_CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
@@ -47,6 +55,7 @@ jobs:
         run: node scripts/fetch-posts.mjs
 
       - name: Warn if Firebase is still a placeholder
+        if: steps.creds.outputs.configured == 'true'
         run: |
           if grep -q "YOUR_PROJECT_ID" site/firebase-config.js; then
             echo "::warning::site/firebase-config.js still has placeholder values — the site will"\
@@ -54,12 +63,15 @@ jobs:
           fi
 
       - uses: actions/configure-pages@v6
+        if: steps.creds.outputs.configured == 'true'
       - uses: actions/upload-pages-artifact@v5
+        if: steps.creds.outputs.configured == 'true'
         with:
           path: site
 
   deploy:
     needs: build
+    if: needs.build.outputs.configured == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
