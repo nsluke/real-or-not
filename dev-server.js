@@ -1,18 +1,21 @@
-'use strict';
-
 // Local dev only. Serves site/ and stands in for Firestore so the UI can be
 // exercised without a Firebase project. Production is GitHub Pages + Firestore;
 // nothing in this file ships.
 
-const http = require('node:http');
-const fs = require('node:fs');
-const fsp = require('node:fs/promises');
-const path = require('node:path');
-const crypto = require('node:crypto');
+import http from 'node:http';
+import fs from 'node:fs';
+import fsp from 'node:fs/promises';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import { fileURLToPath } from 'node:url';
+
+// Resolved from the module URL rather than cwd — this project's directory name
+// contains a space and a '?', which percent-encode in the raw URL path.
+const ROOT = path.dirname(fileURLToPath(import.meta.url));
 
 const PORT = Number(process.env.PORT || 4571);
-const SITE_DIR = path.join(__dirname, 'site');
-const VOTES_FILE = path.join(__dirname, 'data', 'dev-votes.json');
+const SITE_DIR = path.join(ROOT, 'site');
+const VOTES_FILE = path.join(ROOT, 'data', 'dev-votes.json');
 
 /** @type {Record<string, {postId: string, uid: string, verdict: string, reason: string|null}>} */
 let votes = {};
